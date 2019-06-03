@@ -21,7 +21,7 @@ class MessagesHeader extends React.Component {
                 {/* Channel Search Input */}
                 <Header floated="right">
                     <Input 
-                        onChange={}
+                        // onChange={}
                         size="mini"
                         icon="search"
                         name="searchTerm"
