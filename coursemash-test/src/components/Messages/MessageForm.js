@@ -165,7 +165,7 @@ class MessageForm extends React.Component {
                         onClick={this.sendMessage}
                         disabled={loading}
                         style={{ background: "#f4d835"}}
-                        content="Add Reply"
+                        content="Add Message"
                         labelPosition="left"
                         icon="edit"
                     />
