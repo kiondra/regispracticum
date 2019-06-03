@@ -1,0 +1,43 @@
+html,
+body,
+.app {
+    height: 100vh;
+    background: #eee;
+    padding: 1em;
+}
+
+/* UserPanel.js */
+#display__name {
+    color: #ea02a8;
+    font-size: 1.3em;
+}
+
+/* Messages.js */
+.messages {
+    height: 440px;
+    overflow-y: scroll;
+}
+
+.message__self {
+    border-left: 2px solid #f4d835;
+    padding-left: 8px; 
+}
+
+/* MessageForm.js */
+.message_form {
+    position: fixed !important;
+    bottom: 1em;
+    margin-left: 320px !important;
+    left: 0;
+    right: 1em;
+    z-index: 200;
+}
+
+.message__image {
+    padding: 1em;
+}
+
+/* ProgressBar.js */
+.progress__bar {
+    margin: 0.3em 0 0 0 !important;
+}
