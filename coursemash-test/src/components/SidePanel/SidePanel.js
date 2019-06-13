@@ -1,11 +1,14 @@
 import React from 'react';
-import UserPanel from './UserPanel';
-import Channels from './Channels';
 import { Menu } from 'semantic-ui-react';
 
+import UserPanel from './UserPanel';
+import Channels from './Channels';
+import DirectMessages from './DirectMessage2';
+import Starred from './Starred';
 
 
 class SidePanel extends React.Component {
+
     render() {
         const { currentUser } = this.props;
         return (
@@ -16,9 +19,10 @@ class SidePanel extends React.Component {
                 vertical
                 style={{ background: "#091b84", fontSize: "1.2rem" }}
             >
-
                 <UserPanel currentUser={currentUser} />
+                <Starred currentUser={currentUser}/>
                 <Channels currentUser={currentUser} />
+                <DirectMessages currentUser={currentUser} />
             </Menu>
         )
     }

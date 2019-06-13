@@ -12,6 +12,11 @@ body,
     font-size: 1.3em;
 }
 
+/* Sidepanel.js */
+.menu {
+    padding-bottom: 2em;
+}
+
 /* Messages.js */
 .messages {
     height: 440px;
