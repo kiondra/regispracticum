@@ -1,43 +1,54 @@
 import React from 'react';
 import firebase from '../../firebase';
+import { connect } from 'react-redux';
+import { setCurrentChannel, setPrivateChannel } from '../../actions';
 import { Menu, Icon } from 'semantic-ui-react';
-// import { isUserWhitespacable, catchClause } from '@babel/types';
-// import { userInfo } from 'os';
-
 
 class DirectMessages extends React.Component {
 
     state = {
+        activeChannel: '',
         user: this.props.currentUser,
         users: [],
         usersRef: firebase.database().ref('users'),
         connectedRef: firebase.database().ref('.info/connected'),
-        presenceRef: firebase.database().ref('presence'),
-        loadedUsers: []
+        presenceRef: firebase.database().ref('presence')
     }
+    
 
     componentDidMount() {
         if (this.state.user) {
             this.addListeners(this.state.user.uid);
+            console.log("current user:", this.state.user);
         }
+    }
+
+    componentWillUnmount() {
+        this.removeListners();
+    };
+
+    removeListners = () => {
+        this.state.usersRef.off();
+        this.state.connectedRef.off();
+        this.state.presenceRef.off();
     }
 
     addListeners = currentUserUid => {
         let loadedUsers = [];
+  
         this.state.usersRef.on('child_added', snap => {
             if (currentUserUid !== snap.key) {
                 let user = snap.val();
                 user['uid'] = snap.key;
                 user['status'] = 'offline';
-                loadedUsers.push(user);  
+                loadedUsers.push(user);       
                 this.setState({ users: loadedUsers }); 
-                // this.state.users = loadedUsers;
-            }
-            
+            }  
         });
-        
+
         this.state.connectedRef.on('value', snap => {
             if (snap.val() ===  true) {
+                console.log("connected");
                 const ref = this.state.presenceRef.child(currentUserUid);
                 ref.set(true);
                 ref.onDisconnect().remove(err => {
@@ -50,20 +61,19 @@ class DirectMessages extends React.Component {
 
         this.state.presenceRef.on('child_added', snap => {
             if (currentUserUid !== snap.key) {
-                // Add a status to the user
                 this.addStatusToUser(snap.key);
-
             }
         });
 
         this.state.presenceRef.on('child_removed', snap => {
             if (currentUserUid !== snap.key) {
-                // Add a status to the user
                 this.addStatusToUser(snap.key, false);
                 
             }
         });
     }
+
+ 
 
     addStatusToUser = (userId, connected = true) => {
         const updatedUsers = this.state.users.reduce((acc, user) => {
@@ -72,14 +82,35 @@ class DirectMessages extends React.Component {
             }
             return acc.concat(user);
         }, []);
+
         this.setState({ users: updatedUsers });
     }
 
     isUserOnline = user => user.status === 'online';
 
+    changeChannel = u => {
+        const channelId = this.getChannelId(u.uid);
+        const channelData = {
+            id: channelId,
+            name: u.name
+        };
+        this.props.setCurrentChannel(channelData);
+        this.props.setPrivateChannel(true);
+        this.setActiveChannel(u.uid);
+    }
+
+    getChannelId = userId => {
+        const currentUserId = this.state.user.uid;
+        return userId < currentUserId ?
+            `${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
+    }
+
+    setActiveChannel = userId => {
+        this.setState({ activeChannel: userId});
+    }
+    
     render() {
-        
-        const { users } = this.state;
+        const { users, activeChannel } = this.state;
 
         return (
             <Menu.Menu className="menu">
@@ -89,28 +120,27 @@ class DirectMessages extends React.Component {
                     </span>{' '}
                     ({ users.length })
                 </Menu.Item>
-                {users.map(user => (
-                    <Menu.item
-                        key={user.uid}
-                        onClick={() => console.log(user)}
-                        style={{ opacity: 0.7, fontStyle: 'italic'}}
+                {users.map(u => (
+                    <Menu.Item
+                        key={u.uid}
+                        onClick={() => this.changeChannel(u)}
+                        style={{ opacity: 0.7, fontStyle: 'italic' }}
+                        active={u.uid === activeChannel}
                     >
-
-                        <Icon 
+                    <Icon 
                             name="circle"
-                            color={this.isUserOnline(user) ? 'green' : 'red'}
+                            color={this.isUserOnline(u) ? 'green' : 'red'}
                         />
-
-                        @ {user.name}
-
-                    </Menu.item>
+                    @ {u.name}
+                    </Menu.Item>
                 ))}
-
             </Menu.Menu>
 
         )
     }
+};
 
-}
+export default connect(null, { 
+    setCurrentChannel, setPrivateChannel 
+})(DirectMessages);
 
-export default DirectMessages;
