@@ -1,10 +1,11 @@
 import React from 'react';
-import { Segment, Comment } from 'semantic-ui-react';
+import { Segment, Comment, Icon, Menu, Button, Modal, Input } from 'semantic-ui-react';
 import firebase from '../../firebase';
 
 import MessagesHeader from './MessagesHeader';
 import MessageForm from './MessageForm';
 import Message from './Message';
+
 
 class Messages extends React.Component {
 
@@ -13,6 +14,8 @@ class Messages extends React.Component {
         privateMessagesRef: firebase.database().ref('privateMessages'),
         messageRef: firebase.database().ref("messages"),
         messages: [],
+        message: '',
+        updatedMessage: '',
         messagesLoading: true,
         isStarredChannel: false,
         channel: this.props.currentChannel,
@@ -21,7 +24,8 @@ class Messages extends React.Component {
         numUniqueUsers: '',
         searchTerm: '',
         searchLoading: false,
-        searchResults: []
+        searchResults: [],
+        currentMessage: ''
     }
 
     componentDidMount() {
@@ -72,6 +76,7 @@ class Messages extends React.Component {
             this.countUniqueUsers(loadedMessages);
         })
     }
+
 
     handleStarredChannel =() => {
         this.setState(prevState => ({
@@ -138,13 +143,19 @@ class Messages extends React.Component {
         this.setState({ numUniqueUsers });
     }
 
-    displayMessages = messages => (
+    displayMessages = (messages, getMessagesRef) => (
         messages.length > 0 && messages.map(message => (
-            <Message 
+
+                <Message 
                 key={message.timestamp}
                 message={message}
                 user={this.state.user}
-            />
+                currentChannel={this.state.channel}
+                isPrivateChannel={this.state.privateChannel}
+                getMessagesRef={this.getMessagesRef}
+                />
+                            
+            
         ))
     )
 

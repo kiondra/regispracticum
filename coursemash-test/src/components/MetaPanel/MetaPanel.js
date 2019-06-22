@@ -7,23 +7,23 @@ class MetaPanel extends React.Component {
         activeIndex: 0
     }
 
-    setActiveIndex = (event, titleProps)
+    // setActiveIndex = (event, titleProps)
     
     render() {
-        Const { activeIndex } = this.state;
+        // Const { activeIndex } = this.state;
         return (
             <Segment>
                 <Header as="h3" attached="top">
                     About # Channel
                 </Header>
-                <Accordion styled attached="true">
+                {/* <Accordion styled attached="true">
                     <Accordion.Title
                         active={activeIndex === 0}
                         index={0}
                         onClick={this.setActiveIndex}
                     ></Accordion.Title>
 
-                </Accordion>
+                </Accordion> */}
             </Segment>
         )
     }

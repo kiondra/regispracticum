@@ -5,6 +5,7 @@ import { Segment, Input, Button } from 'semantic-ui-react';
 
 import FileModal from './FileModal';
 import ProgressBar from './ProgressBar';
+import { now } from 'moment';
 
 class MessageForm extends React.Component {
     state = {
@@ -32,12 +33,14 @@ class MessageForm extends React.Component {
     createMessage = (fileUrl = null) => {
         const message = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
+            messageId: `${this.state.user.uid + now()}`,
             user: {
                 id: this.state.user.uid,
                 name: this.state.user.displayName,
                 avatar: this.state.user.photoURL
             },
         };
+        console.log("messageId:", message.messageId);
 
         if (fileUrl != null) {
             message['image'] = fileUrl;
