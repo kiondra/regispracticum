@@ -209,10 +209,10 @@ class UserPanel extends React.Component {
                                        {/* Cropped Image Preview */}
                                        {croppedImage && (
                                            <Image 
-                                                style={{ margin: '3.5em auto' }}  
+                                                style={{ margin: '3.5em auto' }}
                                                 width={100}
                                                 height={100}
-                                                src={croppedImage}                                          
+                                                src={croppedImage}
                                            />
                                        )}
                                    </Grid.Column>

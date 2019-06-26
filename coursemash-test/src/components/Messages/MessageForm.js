@@ -18,7 +18,9 @@ class MessageForm extends React.Component {
         user: this.props.currentUser,
         loading: false,
         errors: [],
-        modal: false
+        modal: false,
+        getMessagesRef: this.props.getMessagesRef,
+        messageId: ''
         
     }
 
@@ -42,6 +44,7 @@ class MessageForm extends React.Component {
         };
         console.log("messageId:", message.messageId);
 
+
         if (fileUrl != null) {
             message['image'] = fileUrl;
         } else {
@@ -53,6 +56,8 @@ class MessageForm extends React.Component {
     sendMessage = () => {
         const { getMessagesRef } = this.props;
         const { message, channel } = this.state;
+
+        // const key = getMessagesRef.push().message.messageId;
 
         if (message) {
             // Send message.

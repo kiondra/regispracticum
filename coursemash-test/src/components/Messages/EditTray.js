@@ -43,19 +43,19 @@ class EditTray extends React.Component {
             }
 
            updatedMessages['/' + messageId] = newMessage;
-           this.getMessagesRef()
-                .put(updatedMessages)
-                .then(() => {
-                    // this.setState({ loading: false, message: '', errors: [] })
-                    console.log("updated message");
-                })
-                .catch(err => {
-                    console.error(err);
-                    this.setState({ 
-                        loading: false, 
-                        errors: this.state.errors.concat(err)
-                    })
-                })
+        //    this.getMessagesRef()
+        //         .put(updatedMessages)
+        //         .then(() => {
+        //             // this.setState({ loading: false, message: '', errors: [] })
+        //             console.log("updated message");
+        //         })
+        //         .catch(err => {
+        //             console.error(err);
+        //             this.setState({ 
+        //                 loading: false, 
+        //                 errors: this.state.errors.concat(err)
+        //             })
+        //         })
         } else {
             this.setState({
                 errors: this.state.errors.concat({ message: 'edit a message' })
