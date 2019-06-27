@@ -20,7 +20,8 @@ class MessageForm extends React.Component {
         errors: [],
         modal: false,
         getMessagesRef: this.props.getMessagesRef,
-        messageId: ''
+        messageId: '',
+        messageIdCount: 0
         
     }
 
@@ -33,9 +34,10 @@ class MessageForm extends React.Component {
     }
 
     createMessage = (fileUrl = null) => {
+    //    this.state.messageIdCount++;
         const message = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
-            messageId: `${this.state.user.uid + now()}`,
+            messageId: this.state.messageIdCount++,
             user: {
                 id: this.state.user.uid,
                 name: this.state.user.displayName,

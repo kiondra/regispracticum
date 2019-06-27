@@ -53,12 +53,62 @@ class ChannelMessage extends React.Component {
     }
 
     handledDeleteMessage =() => {
+        // console.log("Deleting this message: ", this.state.message);
+        // this.state.message.content = '';
+        // // this.setState({ messageContent: ''});
+        // var channel = this.state.channel;
+
+        // var deletedMessageRef = firebase.database().ref(`messages/ + ${channel.id}` );
+
+        // // var ref = `${deletedMessageRef}/${this.state.messageId}`
+        // console.log("deletedMessageRef: ", deletedMessageRef);
+        
+        // var message = this.state.message;
+        // var desiredId = message.messageId;
+        // var messageId = this.state.message.messageId;
+        // var ref = deletedMessageRef.orderByChild("messageId");
+        // // .equalTo(messageId)
+        // console.log("ref", ref.path[2]);
+        // var addMessage = 'checking database';
+
+        // // deletedMessageRef
+        // //     .child(ref)
+        // //     .put('newMessage', addMessage)
+        // //     .then(() => {
+        // //         console.log("new added message: ", addMessage);
+        // //     })
+        // //     .catch(err => {
+        // //         console.error(err);
+        // //     })
+
+
+        // // deletedMessageRef
+        // // .child(this.state.channel.id)
+        // // .once('value')
+        // // .then(data => {
+        // //     if (data.val() !== null) {
+        // //         const messageIds = Object.keys(data.val());
+        // //        console.log("messageIds: ", messageIds);
+        // //     }
+        // // })
+
+        
+
+        // var messageKey = Object.keys(this.state.message);
+        // console.log("messageKey:", messageKey);
+
+        // //  this.state.deletedMessageRef
+        // //     .child(channel.id)
+        // //     .child()
+        
         console.log("Deleting this message: ", this.state.message);
-        this.state.message.content = '';
+        // this.state.message.content = '';
         // this.setState({ messageContent: ''});
         var channel = this.state.channel;
+        var currentMessageRef = 'messages/' + channel.id;
+        console.log("currentMessageRef:", currentMessageRef);
 
-        var deletedMessageRef = firebase.database().ref(`messages/ + ${channel.id}` );
+        var deletedMessageRef = firebase.database().ref(currentMessageRef);
 
         // var ref = `${deletedMessageRef}/${this.state.messageId}`
         console.log("deletedMessageRef: ", deletedMessageRef);
@@ -67,19 +117,32 @@ class ChannelMessage extends React.Component {
         var desiredId = message.messageId;
         var messageId = this.state.message.messageId;
         var ref = deletedMessageRef.orderByChild("messageId");
-        // .equalTo(messageId)
-        console.log("ref", ref.path[2]);
-        var addMessage = 'checking database';
+      
+        // 1uDVqq9E6KV806iQMvHgXI69oT620
 
-        // deletedMessageRef
-        //     .child(ref)
-        //     .put('newMessage', addMessage)
-        //     .then(() => {
-        //         console.log("new added message: ", addMessage);
-        //     })
-        //     .catch(err => {
-        //         console.error(err);
-        //     })
+        console.log("delete messageId:", messageId);
+
+        console.log("this.state.message:", this.state.message);
+        console.log("ref", ref);
+        var addMessage = {
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            messageId: messageId,
+            content: 'firebase test number 3',
+            user: {
+                id: this.state.user.uid,
+                name: this.state.user.displayName,
+                avatar: this.state.user.photoURL
+            },
+        };
+        deletedMessageRef
+            .child(messageId )
+            .update(addMessage)
+            .then(() => {
+                console.log("new added message: ", addMessage);
+            })
+            .catch(err => {
+                console.error(err);
+            })
 
 
         // deletedMessageRef
