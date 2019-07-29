@@ -14,6 +14,7 @@ const App = ({ currentUser, currentChannel }) => (
     <SidePanel
       key={currentUser && currentUser.uid} 
       currentUser={currentUser}
+      className="sidepanel"
     />
 
     <Grid.Column style={{ marginLeft: 320 }}>

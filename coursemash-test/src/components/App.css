@@ -18,8 +18,8 @@ body,
 }
 
 /* Messages.js */
-.messages {
-    height: 440px;
+#message-container {
+    height: 400px;
     overflow-y: scroll;
 }
 

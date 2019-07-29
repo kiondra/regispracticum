@@ -60,7 +60,6 @@ class UserPanel extends React.Component {
                     </Header>
                     </Grid.Row>
 
-         
                 </Grid.Column>
             </Grid>
         );

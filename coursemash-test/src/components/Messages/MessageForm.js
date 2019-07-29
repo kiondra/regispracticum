@@ -33,8 +33,8 @@ class MessageForm extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    createMessage = (fileUrl = null) => {
-    //    this.state.messageIdCount++;
+    createMessage = (fileUrl = null, fileName) => {
+        console.log("creating message...", fileName);
         const message = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             messageId: this.state.messageIdCount++,
@@ -46,12 +46,16 @@ class MessageForm extends React.Component {
         };
         console.log("messageId:", message.messageId);
 
-
-        if (fileUrl != null) {
+        if (fileUrl != null && fileName.indexOf('jpg') > -1) {
             message['image'] = fileUrl;
+            console.log('fileName.indexOf("jpg"): ', fileName.indexOf('jpg'));
+        } else if (fileUrl != null && fileName.indexOf('pdf') > -1) {
+            console.log("creating a pdf message: ", fileName.indexOf('pdf'));
+            message['document'] = fileUrl;
         } else {
             message['content'] = this.state.message;
         }
+        
         return message;
     }
 
@@ -98,6 +102,9 @@ class MessageForm extends React.Component {
         const ref = this.props.getMessagesRef();
         const filePath = `${this.getPath()}/${uuidv4()}.jpg`;
 
+        console.log('filePath: ', filePath);
+        console.log("file.name", file.name);
+
         this.setState({
             uploadState: 'uploading',
             uploadTask: this.state.storageRef.child(filePath).put(file, metadata)
@@ -117,7 +124,9 @@ class MessageForm extends React.Component {
                 },
                 () => {
                     this.state.uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-                        this.sendFileMessage(downloadURL, ref, pathToUpload);
+                        console.log("file.name from send file:", file.name);
+                        var fileName = file.name;
+                        this.sendFileMessage(downloadURL, ref, pathToUpload, fileName);
                     })
                     .catch(err => {
                         console.error(err);
@@ -133,10 +142,10 @@ class MessageForm extends React.Component {
         )
     };
 
-    sendFileMessage = (fileUrl, ref, pathToUpload) => {
+    sendFileMessage = (fileUrl, ref, pathToUpload, fileName) => {
         ref.child(pathToUpload)
             .push()
-            .set(this.createMessage(fileUrl))
+            .set(this.createMessage(fileUrl, fileName))
             .then(() => {
                 this.setState({ uploadState: 'done'})
             })

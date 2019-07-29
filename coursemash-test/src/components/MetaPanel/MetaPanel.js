@@ -1,5 +1,6 @@
 import React from 'react';
-import { Segment, Accordion, Header, Icon, AccordionTitle, AccordionContent, Image } from 'semantic-ui-react';
+import { Segment, Accordion, Header, Icon, AccordionTitle, AccordionContent, Image, Modal } from 'semantic-ui-react';
+import firebase from '../../firebase';
 
 class MetaPanel extends React.Component {
     
@@ -7,7 +8,9 @@ class MetaPanel extends React.Component {
         activeIndex: 0,
         key: this.props.key,
         channel: this.props.currentChannel,
-        privateChannel: this.props.isPrivateChannel
+        privateChannel: this.props.isPrivateChannel,
+        user: this.props.currentUser,
+        modal: false
     }
 
     setActiveIndex = (event, titleProps) => {
@@ -16,9 +19,18 @@ class MetaPanel extends React.Component {
         const newIndex = activeIndex === index ? -1 : index;
         this.setState({ activeIndex: newIndex });
     }
+
+    openModal = () => this.setState({ modal: true });
+
+    closeModal = () => this.setState({ modal: false });
+
+    uploadCourseDocs = () => {
+        console.log("upload document");
+        this.openModal();
+    }
     
     render() {
-        const { activeIndex, privateChannel, channel } = this.state;
+        const { activeIndex, privateChannel, channel, user} = this.state;
 
         if (privateChannel || !channel) return null;
 
@@ -85,6 +97,10 @@ class MetaPanel extends React.Component {
                     Course Content
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === 3}>
+                        <Icon 
+                            name="upload"
+                            onClick={this.uploadCourseDocs}
+                        />
                         <ul>
                             <li>
                                 <Icon name="book"/>

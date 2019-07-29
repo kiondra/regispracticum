@@ -17,8 +17,6 @@ class ChannelMessage extends React.Component {
         modal: false,
         value: '',
         messages: []
-        
-
     }
 
     handleChange = event => {
@@ -43,6 +41,11 @@ class ChannelMessage extends React.Component {
     
     isImage = (message) => {
         return message.hasOwnProperty('image') && 
+            !message.hasOwnProperty('content');
+    }
+
+    isDocument = (message) => {
+        return message.hasOwnProperty('document') &&
             !message.hasOwnProperty('content');
     }
     
@@ -184,7 +187,16 @@ class ChannelMessage extends React.Component {
                         ? <Image src={message.image} className="message__image"/>
                         : <Comment.Text>
                             <p id="comment-text">
-                            <span id="message-content">{message.content}</span>
+                            <span id="message-content"> {message.content}</span>
+                            </p>    
+                        </Comment.Text>
+                    }
+
+                    { this.isDocument(message) 
+                        ? <embed src={message.document} type="application/pdf"/>
+                        : <Comment.Text>
+                            <p id="comment-text">
+                            <span id="message-content"> {message.content}</span>
                             </p>    
                         </Comment.Text>
                     }

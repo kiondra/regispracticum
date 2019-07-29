@@ -12,7 +12,7 @@ class Messages extends React.Component {
     state = {
         privateChannel: this.props.isPrivateChannel,
         privateMessagesRef: firebase.database().ref('privateMessages'),
-        messageRef: firebase.database().ref("messages"),
+        messageRef: firebase.database().ref('messages'),
         messages: [],
         message: '',
         updatedMessage: '',
@@ -191,7 +191,7 @@ class Messages extends React.Component {
                     isStarredChannel={isStarredChannel}
                 />
 
-                <Segment>
+                <Segment id="message-container">
                     <Comment.Group className="messages">
                         {searchTerm ? this.displayMessages(searchResults) :
                         this.displayMessages(messages)

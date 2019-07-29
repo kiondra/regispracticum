@@ -9,8 +9,15 @@ const isOwnMessage = (message, user) => {
 }
 
 const isImage = (message) => {
+    console.log("isImage message: ", message);
     return message.hasOwnProperty('image') && !message.hasOwnProperty('content');
 }
+
+const isDocument = (message) => {
+    console.log("isDocument message: ", message);
+    return message.hasOwnProperty('document') && !message.hasOwnProperty('content');
+}
+
 const timeFromNow = timestamp => moment(timestamp).fromNow();
 
 
@@ -26,12 +33,14 @@ const Message = ({ message, user, getMessagesRef, currentChannel, isPrivateChann
             
             { isImage(message) 
                 ? <Image src={message.image} className="message__image"/>
+                // ? <Document file={message.image} />
                 : <Comment.Text>
-                    <p id="comment-text"><span id="message-content">{message.content}</span></p>    
+                    <p id="comment-text"><span id="message-content">{message.content}</span></p>   
                 </Comment.Text>
             
             }
 
+        
             <Comment.Actions>
                 {/* <Comment.Action >
                     <EditTray 
@@ -55,10 +64,7 @@ const Message = ({ message, user, getMessagesRef, currentChannel, isPrivateChann
 
                             commentText.append(editMessageInput);
 
-                            messageContent.style.display = 'none';
-
-                            
-                            
+                            messageContent.style.display = 'none'; 
                         }}   
                     />
                     

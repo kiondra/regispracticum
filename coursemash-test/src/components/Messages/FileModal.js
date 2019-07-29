@@ -5,7 +5,14 @@ import { Modal, Input, Button, Icon } from 'semantic-ui-react';
 class FileModal extends React.Component {
     state = {
         file: null,
-        authorized: ['image/jpg', 'image/jpeg' ,'image/png']
+        authorized: [
+            'image/jpg',
+            'image/jpeg',
+            'image/png',
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-powerpoint'
+        ]
     }
 
     addFile = event => {
@@ -22,12 +29,13 @@ class FileModal extends React.Component {
 
         if (file != null) {
             if (this.isAuthorized(file.name)) {
-                console.log("File is authorized");
                 //send file
                 const metadata = { contentType: mime.lookup(file.name) };
                 uploadFile(file, metadata);
-                closeModal();
+                closeModal(); 
                 this.clearFile();
+            } else {
+                console.log('file not authorized!!!');
             }
         }
     }
@@ -42,12 +50,12 @@ class FileModal extends React.Component {
 
         return (
             <Modal basic open={modal} onClose={closeModal}>
-                <Modal.Header>Select an Image File </Modal.Header>
+                <Modal.Header>Select an File to Upload! </Modal.Header>
                 <Modal.Content>
                     <Input 
                         fluid
                         onChange={this.addFile}
-                        label="File Types: jpg, png"
+                        label="File Types: jpg, png, pdf"
                         name="file"
                         type="file"
                     />
