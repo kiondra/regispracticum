@@ -47,7 +47,7 @@ class ChannelMessage extends React.Component {
     isDocument = (message) => {
         return message.hasOwnProperty('document') &&
             !message.hasOwnProperty('content');
-    }
+    } 
     
     timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
@@ -195,12 +195,13 @@ class ChannelMessage extends React.Component {
                     { this.isDocument(message) 
                         ? <embed src={message.document} type="application/pdf"/>
                         : <Comment.Text>
-                            <p id="comment-text">
+                            {/* <p id="comment-text">
                             <span id="message-content"> {message.content}</span>
-                            </p>    
+                            </p>     */}
                         </Comment.Text>
                     }
 
+                    {/* TODO: create a reply button for message replies.
                     <Comment.Actions>
                         <Comment.Action>
                             <Icon 
@@ -215,7 +216,7 @@ class ChannelMessage extends React.Component {
                                 onClick={this.handledDeleteMessage}   
                             />
                         </Comment.Action>
-                    </Comment.Actions>
+                    </Comment.Actions> */}
 
                     {/* Edit Post Modal */}
                     <Modal basic open={modal} onClose={this.closeModal}>
@@ -242,10 +243,6 @@ class ChannelMessage extends React.Component {
                 </Comment.Content>
 
             </Comment>
-
-    
-
-
         )
     }
 };

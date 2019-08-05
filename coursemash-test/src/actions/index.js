@@ -34,3 +34,12 @@ export const setPrivateChannel = isPrivateChannel => {
         }
     };
 };
+
+export const setHelpChannel = isHelpChannel => {
+    return {
+        type: actionTypes.SET_HELP_CHANNEL,
+        payload: {
+            isHelpChannel
+        }
+    };
+};

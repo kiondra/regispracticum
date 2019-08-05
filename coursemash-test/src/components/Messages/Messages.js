@@ -12,6 +12,7 @@ class Messages extends React.Component {
     state = {
         privateChannel: this.props.isPrivateChannel,
         privateMessagesRef: firebase.database().ref('privateMessages'),
+        helpChannel: this.props.isHelpChannel,
         messageRef: firebase.database().ref('messages'),
         messages: [],
         message: '',
@@ -57,9 +58,8 @@ class Messages extends React.Component {
 
 
     getMessagesRef = () => {
-        const { messageRef, privateMessagesRef, privateChannel } = this.state;
+        const { messageRef, privateMessagesRef, privateChannel, helpChannel } = this.state;
         return privateChannel ? privateMessagesRef : messageRef;
-
     }
 
     addMessageListener = channelId => {
@@ -152,6 +152,7 @@ class Messages extends React.Component {
                 user={this.state.user}
                 currentChannel={this.state.channel}
                 isPrivateChannel={this.state.privateChannel}
+                isHelpChannel={this.state.isHelpChannel}
                 getMessagesRef={this.getMessagesRef}
                 />
                             

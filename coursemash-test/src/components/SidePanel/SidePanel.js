@@ -5,6 +5,7 @@ import UserPanel from './UserPanel';
 import Channels from './Channels';
 import DirectMessages from './DirectMessages';
 import Starred from './Starred';
+import HelpChannel from './HelpChannel';
 
 
 class SidePanel extends React.Component {
@@ -21,6 +22,7 @@ class SidePanel extends React.Component {
             >
                 <UserPanel currentUser={currentUser} />
                 <Starred currentUser={currentUser} id="starredMesseges"/>
+                <HelpChannel currentUser={currentUser} id="helpChannels" />
                 <Channels currentUser={currentUser} />
                 <DirectMessages currentUser={currentUser} />
             </Menu>

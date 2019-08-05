@@ -97,10 +97,6 @@ class MetaPanel extends React.Component {
                     Course Content
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === 3}>
-                        <Icon 
-                            name="upload"
-                            onClick={this.uploadCourseDocs}
-                        />
                         <ul>
                             <li>
                                 <Icon name="book"/>
