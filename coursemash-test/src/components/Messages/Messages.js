@@ -154,9 +154,7 @@ class Messages extends React.Component {
                 isPrivateChannel={this.state.privateChannel}
                 isHelpChannel={this.state.isHelpChannel}
                 getMessagesRef={this.getMessagesRef}
-                />
-                            
-            
+                />            
         ))
     )
 

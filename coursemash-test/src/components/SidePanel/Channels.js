@@ -148,6 +148,7 @@ class Channels extends React.Component {
                 <Label color="red">{this.getNotificationCount(channel)}</Label>
             )}
             # {channel.name}
+            
 
             </Menu.Item>
     ));

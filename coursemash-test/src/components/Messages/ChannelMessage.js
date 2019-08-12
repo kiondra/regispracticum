@@ -10,6 +10,7 @@ class ChannelMessage extends React.Component {
         key: this.props.key,
         message: this.props.message,
         messageRef: firebase.database().ref("messages"),
+        replyRef: firebase.database().ref('reply'),
         messageId: this.props.message.messageId,
         usersRef: firebase.database().ref('users'),
         user: this.props.user,
@@ -19,23 +20,11 @@ class ChannelMessage extends React.Component {
         messages: []
     }
 
-    handleChange = event => {
-        this.setState({value: event.target.value});
-        // console.log("event.target.value: ", event.target.value);
-      }
-    
-    handleSubmit = event => {
-        this.setState ({ message: this.state.value});
-        // event.preventDefault();
-    }
-
     openModal = () => this.setState({ modal: true });
 
     closeModal = () => this.setState({ modal: false });
 
     isOwnMessage = (message, user) => {
-        // console.log("ownmessage: ", message);
-        // console.log("ownuser: ", user);
         return message.user.id === user.uid ? 'message__self' : '';
     }
     
@@ -51,130 +40,10 @@ class ChannelMessage extends React.Component {
     
     timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
-    saveEditChanges = () => {
-        console.log("saving edit changes")
-    }
-
-    handledDeleteMessage =() => {
-        // console.log("Deleting this message: ", this.state.message);
-        // this.state.message.content = '';
-        // // this.setState({ messageContent: ''});
-        // var channel = this.state.channel;
-
-        // var deletedMessageRef = firebase.database().ref(`messages/ + ${channel.id}` );
-
-        // // var ref = `${deletedMessageRef}/${this.state.messageId}`
-        // console.log("deletedMessageRef: ", deletedMessageRef);
-        
-        // var message = this.state.message;
-        // var desiredId = message.messageId;
-        // var messageId = this.state.message.messageId;
-        // var ref = deletedMessageRef.orderByChild("messageId");
-        // // .equalTo(messageId)
-        // console.log("ref", ref.path[2]);
-        // var addMessage = 'checking database';
-
-        // // deletedMessageRef
-        // //     .child(ref)
-        // //     .put('newMessage', addMessage)
-        // //     .then(() => {
-        // //         console.log("new added message: ", addMessage);
-        // //     })
-        // //     .catch(err => {
-        // //         console.error(err);
-        // //     })
-
-
-        // // deletedMessageRef
-        // // .child(this.state.channel.id)
-        // // .once('value')
-        // // .then(data => {
-        // //     if (data.val() !== null) {
-        // //         const messageIds = Object.keys(data.val());
-        // //        console.log("messageIds: ", messageIds);
-        // //     }
-        // // })
-
-        
-
-        // var messageKey = Object.keys(this.state.message);
-        // console.log("messageKey:", messageKey);
-
-        // //  this.state.deletedMessageRef
-        // //     .child(channel.id)
-        // //     .child()
-        
-        console.log("Deleting this message: ", this.state.message);
-        // this.state.message.content = '';
-        // this.setState({ messageContent: ''});
-        var channel = this.state.channel;
-        var currentMessageRef = 'messages/' + channel.id;
-        console.log("currentMessageRef:", currentMessageRef);
-
-        var deletedMessageRef = firebase.database().ref(currentMessageRef);
-
-        // var ref = `${deletedMessageRef}/${this.state.messageId}`
-        console.log("deletedMessageRef: ", deletedMessageRef);
-        
-        var message = this.state.message;
-        var desiredId = message.messageId;
-        var messageId = this.state.message.messageId;
-        var ref = deletedMessageRef.orderByChild("messageId");
-      
-        // 1uDVqq9E6KV806iQMvHgXI69oT620
-
-        console.log("delete messageId:", messageId);
-
-        console.log("this.state.message:", this.state.message);
-        console.log("ref", ref);
-        var addMessage = {
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            messageId: messageId,
-            content: 'firebase test number 3',
-            user: {
-                id: this.state.user.uid,
-                name: this.state.user.displayName,
-                avatar: this.state.user.photoURL
-            },
-        };
-        deletedMessageRef
-            .child(messageId )
-            .update(addMessage)
-            .then(() => {
-                console.log("new added message: ", addMessage);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
-
-        // deletedMessageRef
-        // .child(this.state.channel.id)
-        // .once('value')
-        // .then(data => {
-        //     if (data.val() !== null) {
-        //         const messageIds = Object.keys(data.val());
-        //        console.log("messageIds: ", messageIds);
-        //     }
-        // })
-
-        
-
-        var messageKey = Object.keys(this.state.message);
-        console.log("messageKey:", messageKey);
-
-        //  this.state.deletedMessageRef
-        //     .child(channel.id)
-        //     .child()
-        
-    }
-
-
     render() {
         const { message, user, modal } = this.state;
 
         return (
-
             <Comment>
                 <Comment.Avatar src={this.state.message.user.avatar}/>
                 <Comment.Content className={this.isOwnMessage(message, user)}>
@@ -195,50 +64,8 @@ class ChannelMessage extends React.Component {
                     { this.isDocument(message) 
                         ? <embed src={message.document} type="application/pdf"/>
                         : <Comment.Text>
-                            {/* <p id="comment-text">
-                            <span id="message-content"> {message.content}</span>
-                            </p>     */}
                         </Comment.Text>
                     }
-
-                    {/* TODO: create a reply button for message replies.
-                    <Comment.Actions>
-                        <Comment.Action>
-                            <Icon 
-                                name='edit' 
-                                onClick={this.openModal}   
-                            />
-                            
-                        </Comment.Action>
-                        <Comment.Action>
-                            <Icon 
-                                name='trash' 
-                                onClick={this.handledDeleteMessage}   
-                            />
-                        </Comment.Action>
-                    </Comment.Actions> */}
-
-                    {/* Edit Post Modal */}
-                    <Modal basic open={modal} onClose={this.closeModal}>
-                    <Modal.Header>Edit Post</Modal.Header>
-                    <Modal.Content>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Input
-                                type="text"
-                                placeholder={message.content}
-                                value={this.state.value}
-                                fluid
-                                onChange={this.handleChange} 
-                            />
-                            <Button type="submit" value="Submit" color="green" inverted>
-                            <Icon name="save" /> Save Edit
-                            </Button>
-                            <Button color="red" inverted onClick={this.closeModal}>
-                                <Icon name="remove" /> Cancel
-                            </Button>
-                        </Form>
-                    </Modal.Content>
-                </Modal>
 
                 </Comment.Content>
 

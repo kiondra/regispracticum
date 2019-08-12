@@ -63,8 +63,6 @@ class MessageForm extends React.Component {
         const { getMessagesRef } = this.props;
         const { message, channel } = this.state;
 
-        // const key = getMessagesRef.push().message.messageId;
-
         if (message) {
             // Send message.
             this.setState({ loading: true });
