@@ -133,9 +133,9 @@ class MetaPanel extends React.Component {
                             </li>
                             <li>
                                 <Icon name="book"/>
-                                <a href="" target="_blank">
+                                {/* <a href="" target="_blank"> */}
                                 Week 6 Content
-                                </a>
+                                {/* </a> */}
                             </li>
                             <li>
                                 <Icon name="book"/>

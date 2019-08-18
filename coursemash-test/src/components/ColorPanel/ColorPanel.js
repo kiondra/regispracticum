@@ -1,5 +1,7 @@
 import React from 'react';
 import firebase from '../../firebase';
+import { connect } from 'react-redux';
+import { setColors } from '../../actions';
 import {
     Sidebar,
     Menu,
@@ -28,7 +30,7 @@ class ColorPanel extends React.Component {
 
     componentDidMount() {
         if (this.state.user) {
-            console.log("Yes there is a user!");
+            console.info("Yes there is a user!");
             this.addUserListener(this.state.currentUserId);
         }
     }
@@ -41,7 +43,6 @@ class ColorPanel extends React.Component {
                 userColorTheme.unshift(snap.val());
                 this.setState({ userColorTheme });
             })
-            console.log('userColorTheme: ', userColorTheme);
     }
 
     openModal = () => this.setState({modal: true});
@@ -59,14 +60,10 @@ class ColorPanel extends React.Component {
     saveColorHandler = () => {
         if (this.state.primary && this.state.secondary) {
             this.saveColors();
-        }
+        } 
     }
 
     saveColors = () => {
-        console.log("currentUser: ", this.state.currentUserId);
-        console.log("primary color for user: ", this.state.primary);
-        console.log("secondary color for user: ", this.state.secondary);
-
         var themeColors = {
             primary: this.state.primary,
             secondary: this.state.secondary
@@ -77,7 +74,7 @@ class ColorPanel extends React.Component {
             .child('colors')
             .update(themeColors)
             .then(() => {
-                console.log('added color theme!');
+                console.info('added color theme!');
                 this.closeModal();
             })
             .catch(err => {
@@ -90,31 +87,26 @@ class ColorPanel extends React.Component {
             }) 
     }
 
-    displayThemeColors = userColorTheme => (
-        userColorTheme.length > 0 && userColorTheme.map((color, i) => (
-            <React.Fragment key={i}>
-                <Divider />
-                    <div className="color__container">
-                        <div className="color__square" style={{ background: color.primary }}>
-                            <div className="color__overlay" style={{ background: color.secondary }}></div>
-                        </div>
-                    </div>
-            </React.Fragment>
-        ))
-    )
+    displayThemeColors = userColorTheme => {       
+        if (userColorTheme.length > 0) {
+           var displayColors = document.getElementById('color-display');
+           displayColors.classList.remove('hidden'); 
+        }
+    }
 
     render() {
         const { modal, primary, secondary, userColorTheme } = this.state;
 
         return (
             <Sidebar
+                id='sidebar_color'
                 as={Menu}
                 icon='labeled'
                 inverted
                 vertical
                 visible
                 width='very thin'
-                style={{ background: '#f4d835'}}
+                style={{ background: '#fff' }}
             >
 
             <Divider />
@@ -122,26 +114,46 @@ class ColorPanel extends React.Component {
                 icon="home"
                 size="large"
                 style={{ 
-                    background: '#ea02a8',
+                    background: '#0e3fb0',
                     marginLeft: '-6px',
-                    marginBottom: '20px'
+                    marginBottom: '20px',
+                    color: '#fff'
+                }}
+            />
+
+            <Button
+                icon="paint brush"
+                size="large"
+                style={{ 
+                    background: '#f4d835',
+                    marginLeft: '-6px',
+                    marginBottom: '20px',
+                    color: '#ea02a8'
                 }}
                 onClick={this.openModal}
             />
 
-            { this.displayThemeColors(userColorTheme) }
+            {/* { this.displayThemeColors(userColorTheme) } */}
 
-            <Button
-                icon="content"
-                size="large"
-                style={{ 
-                    background: '#ea02a8',
-                    marginLeft: '-6px',
-                    marginBottom: '20px'
-                }}
-            />
+            <React.Fragment className="hidden" id="color-display">
+                <Divider />
+                    <div
+                        className="color__container"
+                        onClick={() => this.props.setColors(this.state.primary, this.state.secondary)}
+                    >
+                        <div
+                            className="color__square"
+                            style={{ background: this.state.primary }}
+                        >
+                            <div
+                                className="color__overlay"
+                                style={{ background: this.state.secondary }}
+                            ></div>
+                        </div>
+                    </div>
+            </React.Fragment>
 
-            <Button
+            {/* <Button
                 icon="heart"
                 size="large"
                 style={{ 
@@ -180,12 +192,12 @@ class ColorPanel extends React.Component {
                     marginBottom: '20px'
                 }}
             />
-            
-            <Button
+             */}
+            {/* <Button
                 icon='add'
                 size='large'
                 style={{ background: '#ea02a8', marginLeft: '-6px'}}
-            />
+            /> */}
 
             {/* Color Picker Modal */}
             <Modal basic open={modal} onClose={this.closeModal}>
@@ -218,9 +230,9 @@ class ColorPanel extends React.Component {
                     </Button>
                 </Modal.Actions>
             </Modal>
-            </Sidebar>
+        </Sidebar>
         )
     }
 }
 
-export default ColorPanel;
+export default connect(null, {setColors})(ColorPanel);

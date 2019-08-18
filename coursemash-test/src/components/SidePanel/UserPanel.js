@@ -14,6 +14,7 @@ class UserPanel extends React.Component {
         croppedImage: '',
         blob: '',
         uploadCroppedImage: '',
+        primaryColor: this.props.primaryColor,
         storageRef: firebase.storage().ref(),
         userRef: firebase.auth().currentUser,
         usersRef: firebase.database().ref('users'),
@@ -126,10 +127,10 @@ class UserPanel extends React.Component {
     
     render() {
         const { user, modal, previewImage, croppedImage } = this.state;
-        const { primaryColor } = this.props;
+        const { primaryColor, secondaryColor } = this.props;
 
         return(
-            <Grid style={{ background: '#091b84' }}>
+            <Grid style={{ background: {secondaryColor} }}>
                 <Grid.Column>
                     <Grid.Row style={{ padding: '1.2em', margin: 0 }}>
                         {/* App Header */}
@@ -154,31 +155,7 @@ class UserPanel extends React.Component {
                     </Header.Content>
                     </Grid.Row>
                     <hr/>
-                    <Grid.Row style={{ padding: '1.2em', margin: 0 }}>
-                        {/* App Header */}
-                        
-                        <Header inverted floated="left" as="h2">
-                            
-                            <Header.Content>
-                                {/* <h3>Weekly Highlight</h3> */}
-                                    
-                            </Header.Content>
-                            <small>Tuesday, Jun 4 2019</small>
-                        
-                            <ul style={{fontSize: ".75em"}}>
-                                <li>Task One</li>
-                                <li>Task Two</li>
-                            </ul>
-                            <span><a href=""></a></span>
-                        </Header>
-                        
-                    {/* User Dropdown */}
-                    <Header style={{ padding: '0.25em' }} as="h4" inverted>
-                       
-                    
-                    </Header>
-                    </Grid.Row>
-
+                   
                     {/* Change Avatar Modal */}
                     <Modal basic open={modal} onClose={this.closeModal}>
                         <Modal.Header>Change Avatar</Modal.Header>
@@ -193,6 +170,7 @@ class UserPanel extends React.Component {
                             <Grid centered stackable columns={2}>
                                 <Grid.Row centered>
                                    <Grid.Column className="ui center aligned grid">
+
                                     {/* Image Preview */}
                                     {previewImage && (
                                         <AvatarEditor 

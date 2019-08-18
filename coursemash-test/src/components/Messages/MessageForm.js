@@ -10,6 +10,7 @@ import { now } from 'moment';
 class MessageForm extends React.Component {
     state = {
         storageRef: firebase.storage().ref(),
+        typingRef: firebase.database().ref('typing'),
         uploadTask: null,
         uploadState: '',
         percentUploaded: 0,
@@ -21,8 +22,7 @@ class MessageForm extends React.Component {
         modal: false,
         getMessagesRef: this.props.getMessagesRef,
         messageId: '',
-        messageIdCount: 0
-        
+        messageIdCount: 0,        
     }
 
     openModal = () => this.setState({ modal: true });
@@ -33,8 +33,23 @@ class MessageForm extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    handleKeyDown = () => {
+        const { message, typingRef, channel, user } = this.state;
+
+        if (message) {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .set(user.displayName);
+        } else {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .remove();
+        }
+    }
+
     createMessage = (fileUrl = null, fileName) => {
-        console.log("creating message...", fileName);
         const message = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             messageId: this.state.messageIdCount++,
@@ -44,7 +59,6 @@ class MessageForm extends React.Component {
                 avatar: this.state.user.photoURL
             },
         };
-        console.log("messageId:", message.messageId);
 
         if (fileUrl != null && fileName.indexOf('jpg') > -1) {
             message['image'] = fileUrl;
@@ -61,7 +75,7 @@ class MessageForm extends React.Component {
 
     sendMessage = () => {
         const { getMessagesRef } = this.props;
-        const { message, channel } = this.state;
+        const { message, channel, user, typingRef } = this.state;
 
         if (message) {
             // Send message.
@@ -72,6 +86,10 @@ class MessageForm extends React.Component {
                 .set(this.createMessage())
                 .then(() => {
                     this.setState({ loading: false, message: '', errors: [] })
+                    typingRef
+                        .child(channel.id)
+                        .child(user.uid)
+                        .remove();
                 })
                 .catch(err => {
                     console.error(err);
@@ -101,9 +119,6 @@ class MessageForm extends React.Component {
         const pathToUpload = this.state.channel.id;
         const ref = this.props.getMessagesRef();
         const filePath = `${this.getPath()}/${uuidv4()}.jpg`;
-
-        console.log('filePath: ', filePath);
-        console.log("file.name", file.name);
 
         this.setState({
             uploadState: 'uploading',
@@ -166,7 +181,7 @@ class MessageForm extends React.Component {
             loading,
             modal,
             uploadState,
-            percentUploaded,
+            percentUploaded
         } = this.state;
 
         return(
@@ -175,6 +190,7 @@ class MessageForm extends React.Component {
                     fluid
                     name="message"
                     onChange={this.handleChange}
+                    onKeyDown={this.handleKeyDown}
                     value={message}
                     style={{ marginBottom: '0.7em' }}
                     label={ <Button icon={'add'} />}
@@ -191,17 +207,26 @@ class MessageForm extends React.Component {
                     <Button
                         onClick={this.sendMessage}
                         disabled={loading}
-                        style={{ background: "#f4d835"}}
+                        style={{
+                            background: '#f4d835',
+                            color: '#ea02a8',
+                            width: '225px',
+                            marginRight: '5px'
+                        }}
                         content="Add Message"
                         labelPosition="left"
                         icon="edit"
                     />
                     <Button
-                        style={{ background: "#ea02a8"}}
+                        style={{
+                            background: '#0e3fb0',
+                            color: '#fff',
+                            width: '225px'
+                        }}
                         disabled={uploadState === 'Uploading'}
                         onClick={this.openModal}
                         content="Upload Media"
-                        labelPosition="right"
+                        labelPosition="left"
                         icon="cloud upload"
                     />
 
